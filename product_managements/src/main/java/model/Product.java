@@ -13,8 +13,13 @@ public class Product {
     @Length(min = 2, max = 50, message = "Lenght of Name form 2 - 50 character ")
     private String name;
     private int idcategory;
+    @Min(1)
+    @Max(1000)
     private int quantity;
+    @Min(100)
+    @Max(10000000)
     private BigDecimal price;
+    private String urlImage;
 
 
     public Product(int id, String name, int idcategory, int quantity, BigDecimal price) {
@@ -23,6 +28,23 @@ public class Product {
         this.idcategory = idcategory;
         this.quantity = quantity;
         this.price = price;
+    }
+
+    public Product(int id, String name, int idcategory, int quantity, BigDecimal price, String urlImage) {
+        this.id = id;
+        this.name = name;
+        this.idcategory = idcategory;
+        this.quantity = quantity;
+        this.price = price;
+        this.urlImage = urlImage;
+    }
+
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
     }
 
     public Product() {

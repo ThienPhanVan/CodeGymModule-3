@@ -19,4 +19,7 @@ public interface IProductDAO {
     public boolean updateProduct(Product product) throws SQLException;
 
     public int getNoOfRecords();
+    public boolean checkProductsExists(String username, String password);
+
+    public List<Product> selectProductsPaging(int offset, int noOfRecords, String q);
 }

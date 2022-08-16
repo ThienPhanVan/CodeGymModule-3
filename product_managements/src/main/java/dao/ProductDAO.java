@@ -12,16 +12,18 @@ public class ProductDAO implements IProductDAO {
     private String jdbcUsername = "root";
     private String jdbcPassword = "Weak";
 
-    private static final String INSERT_PRODUCTS_SQL = "INSERT INTO product" + "  (name, idcategory, quantity,price) VALUES " +
-            " (?, ?, ?,?);";
+    private static final String INSERT_PRODUCTS_SQL = "INSERT INTO product" + "  (name, idcategory, quantity,price,urlImage) VALUES " +
+            " (?, ?, ?, ?, ?);";
 
-    private static final String SELECT_PRODUCTS_BY_ID = "select id,name,idcategory,quantity,price from product where id =?";
+    private static final String SELECT_PRODUCTS_BY_ID = "select id,name,idcategory,quantity,price,urlImage from product where id =?";
     private static final String SELECT_ALL_PRODUCTS = "select * from product";
     private static final String DELETE_PRODUCTS_SQL = "delete from product where id = ?;";
-    private static final String UPDATE_PRODUCTS_SQL = "update product set name = ?,idcategory= ?, quantity =?,price=?  where id = ?;";
+    private static final String UPDATE_PRODUCTS_SQL = "update product set name = ?,idcategory= ?, quantity =?,price=?,urlImage=?  where id = ?;";
 
     private int noOfRecords;
-    public ProductDAO(){}
+
+    public ProductDAO() {
+    }
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -37,6 +39,7 @@ public class ProductDAO implements IProductDAO {
         }
         return connection;
     }
+
     @Override
     public void insertProduct(Product product) throws SQLException {
         System.out.println(INSERT_PRODUCTS_SQL);
@@ -52,6 +55,8 @@ public class ProductDAO implements IProductDAO {
             preparedStatement.setInt(2, product.getIdcategory());
             preparedStatement.setInt(3, product.getQuantity());
             preparedStatement.setBigDecimal(4, product.getPrice());
+            preparedStatement.setString(5, product.getUrlImage());
+
 
             System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
@@ -80,7 +85,10 @@ public class ProductDAO implements IProductDAO {
                 int idcategory = Integer.parseInt(rs.getString("idcategory"));
                 int quantity = Integer.parseInt(rs.getString("quantity"));
                 BigDecimal price = rs.getBigDecimal("price");
-                product = new Product(id, name, idcategory, quantity, price);
+                String urlImage = rs.getString("urlImage");
+                product = new Product(id, name, idcategory, quantity, price, urlImage);
+
+
             }
         } catch (SQLException e) {
             printSQLException(e);
@@ -110,7 +118,8 @@ public class ProductDAO implements IProductDAO {
                 int idCategory = rs.getInt("idcategory");
                 int quantity = rs.getInt("quantity");
                 BigDecimal price = rs.getBigDecimal("price");
-                products.add(new Product(id, name, idCategory, quantity,price));
+                String urlImage = rs.getString("urlImage");
+                products.add(new Product(id, name, idCategory, quantity, price, urlImage));
             }
         } catch (SQLException e) {
             printSQLException(e);
@@ -118,20 +127,66 @@ public class ProductDAO implements IProductDAO {
         return products;
 
     }
+
+
     public int getNoOfRecords() {
         return noOfRecords;
     }
-    public static boolean checkProductsExists(String username, String password){
-        if(username.equals("quang")&&password.equals("123123")){
+
+    public boolean checkProductsExists(String username, String password) {
+        if (username.equals("username") && password.equals("password")) {
+            return false;
+        } else {
+
             return true;
         }
-        if(username.equals("tien")&&password.equals("123123")){
-            return true;
+    }
+
+    @Override
+    public List<Product> selectProductsPaging(int offset, int noOfRecords, String q) {
+
+        String query = "select SQL_CALC_FOUND_ROWS * from product where name like ? limit "
+                + offset + ", " + noOfRecords;
+        List<Product> list = new ArrayList<Product>();
+        Product product = null;
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        try {
+            connection = getConnection();
+
+            stmt = connection.prepareStatement(query);
+            stmt.setString(1, '%' + q + '%');
+            System.out.println(stmt);
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setIdcategory(resultSet.getInt("idcategory"));
+                product.setQuantity(resultSet.getInt("quantity"));
+                product.setPrice(resultSet.getBigDecimal("price"));
+                product.setUrlImage(resultSet.getString("urlImage"));
+
+                list.add(product);
+            }
+            resultSet.close();
+            resultSet = stmt.executeQuery("SELECT FOUND_ROWS()");
+            if (resultSet.next())
+                this.noOfRecords = resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        if(username.equals("thien")&&password.equals("123123")){
-            return true;
-        }
-        return false;
+        return list;
     }
 
     @Override
@@ -144,7 +199,7 @@ public class ProductDAO implements IProductDAO {
         Connection connection = null;
         Statement stmt = null;
         try {
-            connection  = getConnection();
+            connection = getConnection();
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
@@ -154,21 +209,21 @@ public class ProductDAO implements IProductDAO {
                 product.setIdcategory(rs.getInt("idcategory"));
                 product.setQuantity(rs.getInt("quantity"));
                 product.setPrice(rs.getBigDecimal("price"));
+                product.setUrlImage(rs.getString("urlImage"));
                 list.add(product);
             }
             rs.close();
 
             rs = stmt.executeQuery("SELECT FOUND_ROWS()");
-            if(rs.next())
+            if (rs.next())
                 this.noOfRecords = rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally
-        {
+        } finally {
             try {
-                if(stmt != null)
+                if (stmt != null)
                     stmt.close();
-                if(connection != null)
+                if (connection != null)
                     connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -195,8 +250,10 @@ public class ProductDAO implements IProductDAO {
             statement.setString(1, product.getName());
             statement.setInt(2, product.getIdcategory());
             statement.setInt(3, product.getQuantity());
-            statement.setBigDecimal(4,product.getPrice());
-            statement.setInt(5, product.getId());
+            statement.setBigDecimal(4, product.getPrice());
+            statement.setString(5, product.getUrlImage());
+
+            statement.setInt(6, product.getId());
 
             rowUpdated = statement.executeUpdate() > 0;
         }

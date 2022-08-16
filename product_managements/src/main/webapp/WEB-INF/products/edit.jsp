@@ -50,29 +50,50 @@
 
         <div class="row">
           <div class="col-sm-12">
-            <form method="post" class="form-horizontal">
+            <form method="post" class="form-horizontal" enctype="multipart/form-data">
               <c:if test="${product != null}">
-                <input type="hidden" name="id" value='${product.getId()}' />
+                <input type="hidden" name="id" value='${product.getId()}'/>
               </c:if>
               <div class="form-group row">
                 <label class="col-md-2 control-label">NAME</label>
                 <div class="col-md-10">
                   <input type="text" class="form-control" name="name"
-                         value="${product.getName()}'/>">
+                         value="${product.getName()}">
                 </div>
               </div>
+              <div class="form-group row">
+                <label class="col-md-2 control-label">IMAGE</label>
+                <div class="col-md-10">
+                  <img id="idImg" src="${product.getUrlImage()}" style="width: 7%; margin-right: 10px;float: left"/>
+                  <input  accept="image/*" onchange="document.getElementById('idImg').src = window.URL.createObjectURL(this.files[0])" style="width: 92%" type="file" class="form-control" name="file"
+                         value="${product.getUrlImage()}">
+                </div>
+              </div>
+
+              <script>
+                var loadFile = function(event) {
+                  var output = document.getElementById('idImg');
+                  output.src = URL.createObjectURL(event.target.files[0]);
+                  output.onload = function() {
+                    URL.revokeObjectURL(output.src) // free memory
+                  }
+                };
+              </script>
+<%--              <input name="file" id="file" type="file" multiple="" accept="products/*" value="${product.getImage()}">--%>
+<%--              <td><img src="/products/${product.getUrlImage()}" width="50px" height="50px"--%>
+<%--                       alt=""></td>--%>
               <div class="form-group row">
                 <label class="col-md-2 control-label">QUANTITY</label>
                 <div class="col-md-10">
                   <input type="text" class="form-control" name="quantity"
-                         value="<c:out value='${product.getQuantity()}'/>">
+                         value="${product.getQuantity()}">
                 </div>
               </div>
               <div class="form-group row">
                 <label class="col-md-2 control-label">PRICE</label>
                 <div class="col-md-10">
                   <input type="text" class="form-control" name="price"
-                         value="<c:out value='${product.getPrice()}'/>">
+                         value="${product.getPrice()}">
                 </div>
               </div>
               <div class="form-group row">

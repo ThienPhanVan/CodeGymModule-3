@@ -44,7 +44,7 @@
                 <label class="custom-control-label" for="dark-rtl-mode-switch">Dark RTL Mode</label>
             </div>
 
-            <a href="https://1.envato.market/eKY0g" class="btn btn-danger btn-block mt-3" target="_blank"><i class="mdi mdi-download mr-1"></i> Download Now</a>
+<%--            <a href="https://1.envato.market/eKY0g" class="btn btn-danger btn-block mt-3" target="_blank"><i class="mdi mdi-download mr-1"></i> Download Now</a>--%>
         </div>
     </div> <!-- end slimscroll-menu-->
 </div>

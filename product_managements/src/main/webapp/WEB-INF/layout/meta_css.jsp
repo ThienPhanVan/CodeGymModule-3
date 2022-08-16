@@ -3,7 +3,7 @@
 <meta content="Coderthemes" name="author">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!-- App favicon -->
-<link rel="shortcut icon" href="/assets\images\favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="https://i.pinimg.com/originals/4b/57/06/4b570687fbe6346b087d14ab741d4d9e.png">
 
 <!-- App css -->
 <link href="/assets\css\bootstrap.min.css" rel="stylesheet" type="text/css" id="bootstrap-stylesheet">

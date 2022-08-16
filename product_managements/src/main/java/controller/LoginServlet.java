@@ -1,5 +1,6 @@
 package controller;
 
+import dao.IProductDAO;
 import dao.ProductDAO;
 
 import javax.servlet.RequestDispatcher;
@@ -22,6 +23,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        IProductDAO ProductDAO = new ProductDAO();
         String username = "";
         String password = "";
         boolean rememberme = false;

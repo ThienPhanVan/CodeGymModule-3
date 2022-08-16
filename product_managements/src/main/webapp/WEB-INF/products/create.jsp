@@ -50,7 +50,7 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <form class="form-horizontal" method="post">
+                        <form class="form-horizontal" method="post"  enctype="multipart/form-data">
 
 
                             <div class="form-group row">
@@ -83,6 +83,27 @@
                                     <input type="text" id="price" name="price" value="${requestScope.product.getPrice()}" class="form-control">
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 control-label">Upload</label>
+                                <div class="col-md-10">
+                                    <input type="file"  name="file" >
+                                </div>
+                            </div>
+<%--                            <tr>--%>
+<%--                                <th>Upload:</th>--%>
+<%--                                <td>--%>
+<%--                                    <!-- <input type="text" name="country" id="country" size="15"/> -->--%>
+
+<%--                                    <input type="file" name="file" size="60" />--%>
+<%--                                </td>--%>
+<%--                            </tr>--%>
+<%--                            <div class="form-group row">--%>
+<%--                                <label class="col-md-2 control-label">Upload</label>--%>
+<%--                                <div class="col-md-10">--%>
+<%--                                    <input type="text" id="file" name="file" size="60"  class="form-control">--%>
+<%--                                </div>--%>
+<%--                            </div>--%>
+
 
 
                             <div class="form-group row">

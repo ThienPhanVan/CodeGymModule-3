@@ -1,7 +1,7 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +9,6 @@
     <meta charset="utf-8">
     <title>Basic Tables | Zircos - Responsive Bootstrap 4 Admin Dashboard</title>
     <jsp:include page="/WEB-INF/layout/meta_css.jsp"></jsp:include>
-
 </head>
 
 <body data-layout="horizontal">
@@ -27,7 +26,7 @@
     <!-- ============================================================== -->
 
     <div class="content-page">
-        <div class="content">
+        <div class="content" >
 
             <!-- Start Content-->
             <div class="container-fluid">
@@ -45,36 +44,23 @@
                 </div>
                 <!-- end page title -->
 
-                <div class="row">
-                    <div class="col-sm-12">
+                <div class="row " >
+                    <div class="col-sm-12 ">
                         <div class="row">
                             <div class="table-responsive">
-                                <form action="product">
-                                    Search: <input type="text" hint="search" value="${requestScope.q}" name="q"> Filter:
-                                    <select name="idcategory">
-                                        <option value="-1">ALL Product</option>
-                                        <c:forEach items="${applicationScope.listCategory}" var="category">
-                                            <c:choose>
-                                                <c:when test="${category.getId()==requestScope.idcategory}">
-                                                    <option selected
-                                                            value="${category.getId()}">${category.getName()}</option>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <option selected
-                                                            value="${category.getId()}">${category.getName()}</option>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
-
-                                    </select>
-                                    <button type="get">Submit</button>
-                                </form>
-                                <table class="table m-0">
+                                <div class="row">
+<%--                                <form action="/product">--%>
+<%--                                    Search: <input type="text" width="100px" hint="search" value="${requestScope.q}" name="q" placeholder="Search">--%>
+<%--                                    <button type="submit" style="line-height: 1;" class="btn btn-outline-primary">Submit</button>--%>
+<%--                                </form>--%>
+                                </div>
+                                <table class="table table-striped m-0">
 
                                     <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
+                                        <th>Image</th>
                                         <th>Quantity</th>
                                         <th>Category</th>
                                         <th>Price</th>
@@ -86,14 +72,22 @@
                                     <c:forEach items="${requestScope.productList}" var="product">
                                         <tr>
                                             <td>${product.getId()}</td>
-                                            <td>${product.getName()}</td>
+                                            <td>
+                                                <a href="/product?action=edit&id=${product.getId()}">${product.getName()}</a>
+                                            </td>
+                                            <td><img src="${product.getUrlImage()}" width="50px" height="50px" alt="" /></td>
                                             <td>${product.getQuantity()}</td>
                                             <c:forEach items="${applicationScope.listCategory}" var="category">
                                                 <c:if test="${category.getId()==product.getIdcategory()}">
                                                     <td>${category.getName()}</td>
                                                 </c:if>
                                             </c:forEach>
-                                            <td>${product.getPrice()}</td>
+                                            <td>
+<%--                                                    ${product.getPrice()}--%>
+                                                <c:set var="price" value="${product.getPrice()}"/>
+                                                <fmt:setLocale value="vi_VN"/>
+                                                <fmt:formatNumber value="${price}" type="currency"/>
+                                            </td>
                                             <td>
                                                 <a href="/product?action=edit&id=${product.getId()}"
                                                    class="btn btn-outline-orange">Edit</a>
@@ -108,98 +102,65 @@
 
                                 <%--For displaying Previous link except for the 1st page --%>
 
-
                             </div>
-
-
 
                         </div>
                         <!-- end card-box -->
                     </div>
                     <!-- end col -->
                 </div>
+
                 <!-- end row -->
 
             </div>
-<%--            <div class="d-flex justify-content-center border-0 text-white" >--%>
-<%--                <c:if test="${currentPage != 1}">--%>
-<%--                    <td>--%>
-<%--                        <a href="product?page=${currentPage - 1}&q=${requestScope.q}&idcategory=${requestScope.idcategory}"--%>
-<%--                           class="p-2 mr-1 btn btn-primary border-0">Previous</a>--%>
-<%--                    </td>--%>
-<%--                </c:if>--%>
-
-<%--                &lt;%&ndash;For displaying Page numbers.--%>
-<%--                The when condition does not display a link for the current page&ndash;%&gt;--%>
-<%--                <table cellpadding="5" cellspacing="5">--%>
-<%--                    <tr class="border-0">--%>
-<%--                        <c:forEach begin="1" end="${noOfPages}" var="i">--%>
-<%--                            <c:choose>--%>
-<%--                                <c:when test="${currentPage eq i}">--%>
-<%--                                    <td class="border-0 p-2 m-2 bg-primary">${i}</td>--%>
-<%--                                </c:when>--%>
-<%--                                <c:otherwise>--%>
-<%--                                    <td class="border-0 p-2 mr-1 bg-primary text-white">--%>
-<%--                                        <a href="product?page=${i}&q=${requestScope.q}&idcategory=${requestScope.idcategory}" class="text-white">${i}</a>--%>
-<%--                                    </td>--%>
-<%--                                </c:otherwise>--%>
-<%--                            </c:choose>--%>
-<%--                        </c:forEach>--%>
-<%--                        <c:if test="${currentPage lt noOfPages}">--%>
-<%--                            <td class="border-0 p-2 mr-1 btn btn-primary">--%>
-<%--                                <a href="product?page=${currentPage + 1}&q=${requestScope.q}&idcategory=${requestScope.idcategory}">Next</a>--%>
-<%--                            </td>--%>
-<%--                        </c:if>--%>
-<%--                    </tr>--%>
-
-<%--                </table>--%>
-
-<%--                &lt;%&ndash;For displaying Next link: lt < noOfPages&ndash;%&gt;--%>
-<%--            </div>--%>
-
-<%--            *******************--%>
 
             <!-- end container-fluid -->
 
         </div>
+        <!-- end content -->
+
         <div class="row w-100">
-            <div class="col-12  d-flex justify-content-center border-0 text-white" >
+            <div class="col-12  d-flex justify-content-center border-0 text-white">
                 <div class="container-fluid mt-2">
                     <div class="float-right">
                         <c:if test="${currentPage!=1}">
-                            <a href="product?page=${currentPage-1}" class="p-2 mr-1 border">Previous</a>
+                            <a href="product?page=${currentPage-1}&q${requestScope.q}"
+                               class="p-2 mr-1 border">Previous</a>
                         </c:if>
                         <c:forEach begin="1" end="${noOfPages}" var="i">
                             <c:choose>
                                 <c:when test="${currentPage eq 1}">
-                                    <a href="product?page=${i}" class="p-2 mr-1 border">${i}</a>
+                                    <a href="product?page=${i}&q=${requestScope.q}" class="p-2 mr-1 border">${i}</a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="product?page=${i}" class="p-2 mr-1 border">${i}</a>
+                                    <a href="product?page=${i}&q=${requestScope.q}" class="p-2 mr-1 border">${i}</a>
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>
                         <c:if test="${currentPage<noOfPages}">
-                            <a href="product?page=${currentPage+1}" class="p-2 mr-1 border">Next</a>
+                            <a href="product?page=${currentPage+1}&q=${requestScope.q}" class="p-2 mr-1 border">Next</a>
                         </c:if>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- end content -->
-
-
-        <!-- Footer Start -->
-        <jsp:include page="/WEB-INF/layout/footer.jsp"></jsp:include>
-        <!-- end Footer -->
-
     </div>
+
+
 
     <!-- ============================================================== -->
     <!-- End Page content -->
     <!-- ============================================================== -->
 
 </div>
+<!-- Footer Start -->
+<div>
+
+
+    <jsp:include page="/WEB-INF/layout/footer.jsp"></jsp:include>
+</div>
+<!-- end Footer -->
+
 <!-- END wrapper -->
 
 <jsp:include page="/WEB-INF/layout/rightbar.jsp"></jsp:include>
